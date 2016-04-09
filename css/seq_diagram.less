@@ -1,0 +1,108 @@
+@px: 0.0625em;
+@small_font_size: 10*@px;
+@midium_font_size: 12*@px;
+@large_font_size: 14*@px;
+@huge_font_size: 16*@px;
+@box_bordercolor: black;
+@box_backcolor_begin: #BBB;
+@box_backcolor_end: lighten(@box_backcolor_begin, 50%);
+@box_shadowcolor: darken(@box_backcolor_begin, 10%);
+@subsys_maxwidth: 200*@px;
+
+.seqdiagram {
+	margin: 0;
+	padding: 0;
+	* {
+		margin: 0;
+		padding: 0;
+	}
+	width: 100%;
+	height: 100%;
+	.seqdiagram_sysbox {
+		display: flex;
+		position: relative;
+		width: 100%;
+		height: 100%;
+		.subsys {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			max-width: @subsys_maxwidth;
+			margin: @small_font_size;
+			.title {
+				border: @px solid @box_bordercolor;
+				border-radius: 6*@px;
+				padding: 5*@px;
+				text-align: center;
+				text-shadow: 2*@px 2*@px 2*@px @box_shadowcolor;
+				box-shadow: 4*@px 4*@px 4*@px @box_shadowcolor;
+				font-size: @huge_font_size;
+				background-image: linear-gradient(to bottom, @box_backcolor_begin, @box_backcolor_end);
+			}
+			.bodybox {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				align-items: center;
+				.bodyline {
+					position: relative;
+					top: 0;
+					left: 0;
+					z-index: -1;
+					width: 0;
+					border-left: 1px dashed @box_bordercolor;
+					flex: 0.5;
+				}
+				.bodydock {
+					width: 10*@px;
+					background-color: pink;
+					flex: 1;
+					box-shadow: 4*@px 4*@px 4*@px @box_shadowcolor;
+				}
+			}
+		}
+	}
+	.arrow_line {
+		position: absolute;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: @small_font_size;
+		z-index: -1;
+		width:200px;
+		.line {
+			border-bottom: @px solid @box_bordercolor;	
+			height: 0;
+			flex: 1;
+		}
+		.dashline {
+			border-bottom: @px dashed @box_bordercolor;	
+			height: 0;
+			flex: 1;
+		}
+		.arrow_to_right:before {
+			font-size: @huge_font_size;
+			content: "▶";
+		}
+		.arrow_to_left:before {
+			//font-size: @midium_font_size;
+			content: "◀";
+		}
+		.note {
+			position: absolute;
+			margin: auto;
+			top: -@large_font_size;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			text-align: center;
+			font-size: @midium_font_size;
+			text-shadow: 2*@px 2*@px 2*@px @box_shadowcolor;
+		}
+	}
+}
+
+
+

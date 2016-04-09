@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<style>
+html,body {width:100%;height:100%;}
+* {margin:0px;padding:0px;}
+</style>
+<link href="./css/seq_diagram.less" rel="stylesheet/less"/>
+<script type="text/javascript" src="js/less.min.js"></script>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/seq_diagram.js"></script>
+<script>
+$(document).ready(function(){
+	var linelist = [];
+	linelist.push({'from':'Safe Domain GW', 'to':'Trade Gateway', 'note':'send trade request'});
+	linelist.push({'from':'Trade Gateway', 'to':'Pre-Trade Logic Control', 'note':'internal protocol'});
+	linelist.push({'from':'Pre-Trade Logic Control', 'to':'Trade Gateway', 'note':'success response', 'dashed':1});
+	linelist.push({'from':'Trade Gateway', 'to':'Safe Domain GW', 'note':'success response', 'dashed':1});
+	var sd = new SequenceDiagram(linelist, $(document.body));
+	sd.draw();
+});
+</script>
+</head>
+
+<body>
+</body>
+
+</html>
