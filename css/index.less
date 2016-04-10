@@ -1,0 +1,21 @@
+@px: 0.0625em;
+
+html,body {width:100%; height:100%; overflow:hidden; }
+* {margin:0px; padding:0px;}
+
+body {display:flex; flex-direction:column;}
+.toolbar {
+	padding:5*@px;
+	button {
+		margin-left:10*@px;
+		padding: 2*@px;
+		border-radius: 6*@px;
+	}
+}
+.editor {
+	flex:1;
+	margin: 5*@px;
+	padding: 5*@px;
+	background-color: DarkSlateGray;
+	color: lightgray;
+}

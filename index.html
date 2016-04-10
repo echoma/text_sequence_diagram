@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<link href="./css/index.less" rel="stylesheet/less"/>
+<script type="text/javascript" src="js/less.min.js"></script>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<link href="./css/icomoon/style.css" rel="stylesheet"/>
+<script>
+var render_win = null;
+$(document).ready(function(){
+	var win = nw.Window.get();
+	win.on('close', function() {
+		if (render_win)
+		{
+			render_win.close(true);
+			render_win = null;
+		}
+		win.close(true);
+	});
+	//window menu
+	//var menu = new nw.Menu({type:'menubar'});
+	//menu.append(new nw.MenuItem({ label: 'File' }));
+	//win.menu = menu;
+	//open the render window
+	nw.Window.open('render.html', {
+			new_instance:false,
+			id:"render",
+			title:'Sequence Diagram View',
+			min_width:200,
+			min_height:200
+		},
+		function(w){
+			render_win = w;
+			win.focus();
+		}
+	);
+	//editor update event handler
+	var editor = $(document.body).find('textarea');
+	editor.change(function(){
+		sd.draw($(this).val());
+	}).keyup(function(){
+		$(this).attr('editor_updated',1);
+	});
+	setInterval(function(){
+		var updated = parseInt(editor.attr('editor_updated'));
+		if (updated>0)
+		{
+			render_win.window.draw(editor.val());
+			editor.attr('editor_updated',0);
+		}
+	},1500);
+});
+function zoom(inc)
+{
+	if (inc==0)
+		render_win.zoomLevel = 0;
+	else
+		render_win.zoomLevel += inc;
+}
+</script>
+</head>
+
+<body>
+
+<div class="toolbar">
+	<button onClick="zoom(0.2)" title="Zoom In"><span class="icon-zoom-in"></span> Zoom In</button>
+	<button onClick="zoom(-0.2)" title="Zoom Out"><span class="icon-zoom-out"></span> Zoom Out</button>
+	<button onClick="zoom(0)" title="Zoom Reset"><span class="icon-spinner11"></span> Zoom Reset</button>
+</div>
+
+<textarea class="editor" editor_updated="1">
+Conn Server -> Safe Domain GW : new order request
+Safe Domain GW -> Trade Gateway : authenticated
+Trade Gateway -> Logic Control : internal protocol
+Logic Control --> Trade Gateway : success response
+Trade Gateway --> Safe Domain GW : success response
+Safe Domain GW --> Conn Server : response
+</textarea>
+
+</body>
+</html>

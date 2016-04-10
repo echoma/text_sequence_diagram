@@ -1,0 +1,11 @@
+{
+	"name": "Text Sequence Diagram",
+	"main": "index.html",
+		"window": {
+		"width": 450,
+		"height": 300,
+		"min_width": 100,
+		"min_height": 100,
+		"plugin": false
+	}
+}

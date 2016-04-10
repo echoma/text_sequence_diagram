@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<style>
+html,body {width:100%; height:100%; overflow:hidden; }
+* {margin:0px; padding:0px;}
+body {background-image: linear-gradient(to bottom, #EEE, #FFF);}
+</style>
+<link href="./css/seq_diagram.less" rel="stylesheet/less"/>
+<script type="text/javascript" src="js/less.min.js"></script>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/seq_diagram.js"></script>
+<script>
+var sd = null;
+$(document).ready(
+	function(){
+		sd = new SequenceDiagram($(document.body));
+		var win = nw.Window.get();
+		win.on('close', function() { });
+	}
+);
+function draw(text)
+{
+	sd.draw(text);
+}
+</script>
+</head>
+
+<body>
+</body>
+
+</html>

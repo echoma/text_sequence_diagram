@@ -6,6 +6,8 @@ function SequenceDiagram(jq_con_dom)
 	t.jq_con_dom = jq_con_dom;
 	t.jq_dom = $('<div class="seqdiagram"></div>');
 	t.jq_dom_sysbox = $('<div class="seqdiagram_sysbox"></div>');
+	t.jq_dom.append(t.jq_dom_sysbox);
+	t.jq_con_dom.append(t.jq_dom);
 	t.dock_color_list = ['SteelBlue','coral','DeepSkyBlue','lightgreen','SlateBlue','HotPink','Olive','Sienna','Tan'];
 	t.px2em=function(n) { return n*0.0625; };
 	t.interval=setInterval(function(){ t.recal_line(); },1000);
@@ -121,9 +123,6 @@ function SequenceDiagram(jq_con_dom)
 			dom_bodybox.append($('<div class="bodyline"></div>'));//dash line at the end
  			t.jq_dom_sysbox.append(dom_subsys);
 		}
-		//create a new diagram
-		t.jq_dom.append(t.jq_dom_sysbox);
-		t.jq_con_dom.append(t.jq_dom);
 		//create lines between subsys
 		for (var i=0; i<t.line_list.length; ++i)
 		{
@@ -153,6 +152,7 @@ function SequenceDiagram(jq_con_dom)
 			t.jq_dom.append(dom_line);
 		}
 		$(window).resize( function(){ t.recal_line(); } );
+		setTimeout(function(){t.recal_line();},1);
 	};
 	t.recal_line=function()
 	{
