@@ -1,12 +1,14 @@
-function SequenceDiagram(linelist, jq_con_dom)
+function SequenceDiagram(jq_con_dom)
 {
 	var t = this;
 	t.subsys_list = [];
-	t.line_list = linelist;
+	t.line_list = [];
 	t.jq_con_dom = jq_con_dom;
 	t.jq_dom = $('<div class="seqdiagram"></div>');
 	t.jq_dom_sysbox = $('<div class="seqdiagram_sysbox"></div>');
-	t.dock_color_list = ['SteelBlue','coral','aqua','bisque','lightgreen','HotPink','Olive','Sienna','Tan'];
+	t.dock_color_list = ['SteelBlue','coral','DeepSkyBlue','lightgreen','SlateBlue','HotPink','Olive','Sienna','Tan'];
+	t.px2em=function(n) { return n*0.0625; };
+	t.interval=setInterval(function(){ t.recal_line(); },1000);
 	t.ensure_subsys=function(name)
 	{
 		for (var j=0; j<t.subsys_list.length; ++j)
@@ -68,8 +70,16 @@ function SequenceDiagram(linelist, jq_con_dom)
 		//end the final line seg
 		sys['lineseg'].push({'begin':seg_start, 'end':bitmap.length-1, 'is_dock':is_dock});
 	};
-	t.draw=function()
+	t.draw=function(o)
 	{
+		//save line list
+		if (typeof(o)=='string')
+			t.line_list = t.parse(o);
+		else
+			t.line_list = o;
+		//clear dom before draw
+		t.jq_dom_sysbox.children().remove();
+		t.jq_dom.children('.arrow_line').remove();
 		//cal subsys list
 		for (var i=0; i<t.line_list.length; ++i)
 		{
@@ -89,8 +99,8 @@ function SequenceDiagram(linelist, jq_con_dom)
 		for (var i=0; i<t.subsys_list.length; ++i)
 		{
 			var subsys = t.subsys_list[i];
-			console.log(subsys);
-			var dom_subsys = $('<div class="subsys">\
+			//console.log(subsys);
+			var dom_subsys = $('<div class="subsys" name="subsys'+i+'">\
 				<div class="title"></div>\
 				<div class="bodybox"></div>\
 				<div class="title"></div>\
@@ -142,24 +152,74 @@ function SequenceDiagram(linelist, jq_con_dom)
 			dom_line.find('.note').text(line['note']);
 			t.jq_dom.append(dom_line);
 		}
-		t.recal_line();
-		/*t.jq_dom.append($('<div class="arrow_line" style="width:210px; left:115px; top:200px;">\
-		<div class="line"></div>\
-		<div class="arrow_to_right"></div>\
-		<div class="note">发送交易请求</div>\
-	</div>\
-	<div class="arrow_line" style="width:210px; left:115px; top:280px;">\
-		<div class="arrow_to_left"></div>\
-		<div class="dashline"></div>\
-		<div class="note">返回成功</div>\
-	</div>'));*/
+		$(window).resize( function(){ t.recal_line(); } );
 	};
 	t.recal_line=function()
 	{
+		var dock_width = t.jq_dom_sysbox.children('[name=subsys0]').find('.bodydock:first').width();
 		for (var i=0; i<t.line_list.length; ++i)
 		{
-			var dom = t.jq_dom.children('[name=line'+i+']');
-			dom.css('top',(i*100)+'px');
+			var line = t.line_list[i];
+			var dom_line = t.jq_dom.children('[name=line'+i+']');
+			var dom_from_subsys = t.jq_dom_sysbox.children('[name=subsys'+line['from_sys_idx']+']');
+			var dom_to_subsys = t.jq_dom_sysbox.children('[name=subsys'+line['to_sys_idx']+']');
+			var dom_left = null, dom_right = null;
+			if (line['from_sys_idx'] < line['to_sys_idx'])//line is left to right
+			{
+				dom_left = dom_from_subsys;
+				dom_right = dom_to_subsys;
+			}
+			else//line is right to left
+			{
+				dom_left = dom_to_subsys;
+				dom_right = dom_from_subsys;
+			}
+			//calculate line's left and right end position, calculate width
+			var left_x = dom_left.offset().left + dom_left.width()/2 + dock_width/2;
+			var right_x = dom_right.offset().left + dom_right.width()/2 - dock_width/2;
+			dom_line.css('width',right_x-left_x);
+			dom_line.css('left', left_x);
+			//calculate top
+			var vseg_cnt = t.line_list.length+1;
+			var dom_bodybox = dom_from_subsys.children('.bodybox');
+			var avg_seg_height = dom_bodybox.height()/vseg_cnt;
+			var bodybox_top = dom_bodybox.offset().top;
+			//console.log(bodybox_top+'+('+(i+1)+'*'+avg_seg_height+')');
+			dom_line.css('top',bodybox_top+(i+1)*avg_seg_height-5);
 		}
-	}
+	};
+	t.parse=function(t)
+	{
+		var re = /^(.*?)(\-{1,2}\>)([^:]*):?(.*)$/;
+		var lines = t.split("\n");
+		var line_list = [];
+		for (var i=0; i<lines.length; ++i)
+		{
+			var mats = lines[i].match(re);
+			if (null==mats)
+				continue;
+			var name_begin = mats[1].trim();
+			var op_str = mats[2].trim();
+			var name_end = mats[3].trim();
+			var note = mats[4].trim();
+			var obj = {'from':name_begin, 'to':name_end};
+			if (op_str=='->')
+			{
+				obj['type'] = 'line';
+				obj['note'] = note;
+			}
+			else if (op_str=='-->')
+			{
+				obj['type'] = 'line';
+				obj['is_dash'] = 1;
+				obj['note'] = note;
+			}
+			else
+			{
+				continue;
+			}
+			line_list.push(obj);
+		}
+		return line_list;
+	};
 }

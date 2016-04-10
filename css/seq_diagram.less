@@ -39,6 +39,9 @@
 				box-shadow: 4*@px 4*@px 4*@px @box_shadowcolor;
 				font-size: @huge_font_size;
 				background-image: linear-gradient(to bottom, @box_backcolor_begin, @box_backcolor_end);
+				white-space: nowrap;
+				overflow: hidden; 
+				text-overflow:ellipsis;
 			}
 			.bodybox {
 				flex: 1;
@@ -83,23 +86,23 @@
 			flex: 1;
 		}
 		.arrow_to_right:before {
-			font-size: @huge_font_size;
 			content: "▶";
 		}
 		.arrow_to_left:before {
-			//font-size: @midium_font_size;
 			content: "◀";
 		}
 		.note {
 			position: absolute;
 			margin: auto;
-			top: -@large_font_size;
+			top: -@huge_font_size;
 			left: 0;
 			bottom: 0;
 			right: 0;
 			text-align: center;
-			font-size: @midium_font_size;
+			font-size: @large_font_size;
 			text-shadow: 2*@px 2*@px 2*@px @box_shadowcolor;
+			paddng: 0 5*@px 0 5*@px;
+			color: dimgray;
 		}
 	}
 }
