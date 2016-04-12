@@ -34,6 +34,10 @@ $(document).ready(function(){
 		function(w){
 			render_win = w;
 			win.focus();
+			render_win.on('close', function(){
+				render_win.close(true);
+				win.close(true);
+			});
 		}
 	);
 	//editor update event handler
@@ -45,12 +49,21 @@ $(document).ready(function(){
 	});
 	setInterval(function(){
 		var updated = parseInt(editor.attr('editor_updated'));
-		if (updated>0)
+		if (updated>0 &&　render_win!=null)
 		{
 			render_win.window.draw(editor.val());
 			editor.attr('editor_updated',0);
 		}
 	},1500);
+	//dragndrop local file to open
+	window.ondrop=function(e)
+	{
+		e.preventDefault();
+		for (var i=0; i<e.dataTransfer.files.length; ++i)
+		{
+			console.log(e.dataTransfer.files[i].path);
+		}
+	}
 });
 function zoom(inc)
 {

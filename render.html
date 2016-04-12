@@ -14,13 +14,22 @@ body {background-image: linear-gradient(to bottom, #EEE, #FFF);}
 <script type="text/javascript" src="js/seq_diagram.js"></script>
 <script>
 var sd = null;
-$(document).ready(
-	function(){
-		sd = new SequenceDiagram($(document.body));
-		var win = nw.Window.get();
-		win.on('close', function() { });
+$(document).ready(function(){
+	sd = new SequenceDiagram($(document.body));
+	var win = nw.Window.get();
+	win.on('close', function() { win.close(true); });
+	//prevent drag n drop
+	window.ondrop=function(e)
+	{
+		e.preventDefault();
+		return false;
 	}
-);
+	window.ondrag=function(e)
+	{
+		e.preventDefault();
+		return false;
+	}
+});
 function draw(text)
 {
 	sd.draw(text);
