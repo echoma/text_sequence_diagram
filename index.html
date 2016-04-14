@@ -20,9 +20,12 @@ $(document).ready(function(){
 		win.close(true);
 	});
 	//window menu
-	//var menu = new nw.Menu({type:'menubar'});
-	//menu.append(new nw.MenuItem({ label: 'File' }));
-	//win.menu = menu;
+	var menu = new nw.Menu({type:'menubar'});
+	var submenu_file = new nw.Menu();
+	submenu_file.append(new nw.MenuItem({label:'Open', key:'O'}));
+	submenu_file.append(new nw.MenuItem({label:'Save', key:'S'}));
+	menu.append(new nw.MenuItem({ label: 'File', submenu:submenu_file }));
+	win.menu = menu;
 	//open the render window
 	nw.Window.open('render.html', {
 			new_instance:false,
@@ -59,10 +62,20 @@ $(document).ready(function(){
 	window.ondrop=function(e)
 	{
 		e.preventDefault();
-		for (var i=0; i<e.dataTransfer.files.length; ++i)
+		if (e.dataTransfer.files.length>0)
 		{
-			console.log(e.dataTransfer.files[i].path);
+			var file_path = e.dataTransfer.files[0].path;
+			const fs = require('fs');
+			fs.readFile(file_path, (err,data)=>{
+				if(err)
+				{ 
+					alert(err);
+					return;
+				}
+				editor.val(data).attr('editor_updated',1);
+			});
 		}
+		return false;
 	}
 });
 function zoom(inc)
@@ -84,6 +97,8 @@ function zoom(inc)
 </div>
 
 <textarea class="editor" editor_updated="1">
+# Here is a sample:
+
 Conn Server -> Safe Domain GW : new order request
 Safe Domain GW -> Trade Gateway : authenticated
 Trade Gateway -> Logic Control : internal protocol
