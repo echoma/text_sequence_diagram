@@ -3,6 +3,7 @@
 
 <head>
 <meta charset="utf-8">
+<title>Online Text Sequence Diagram</title>
 <style>
 html,body {width:100%; height:100%; overflow:hidden; }
 * {margin:0px; padding:0px;}
@@ -32,19 +33,19 @@ body {background-color:DarkKhaki;}
 <script type="text/javascript" src="js/seq_diagram.js"></script>
 <script>
 $(document).ready(function(){
+	$('#editor_dlg').dialog({
+		title: "Text Editor",
+		dialogClass: "no-close",
+		width: 400,
+		height: 300,
+		position: {my: "left top", at: "left top", of: window}
+	});
 	$('#render_dlg').dialog({
 		title: "Sequence Diagram View",
 		dialogClass: "no-close",
 		width: "80%",
-		height: 500,
-		position: {my: "right bottom", at: "right bottom", of: window}
-	});
-	$('#editor_dlg').dialog({
-		title: "Text Editor",
-		dialogClass: "no-close",
-		width: 500,
-		height: 300,
-		position: {my: "left top", at: "left top", of: window}
+		height: 600,
+		position: {my: "center", at: "center", of: window}
 	});
 	//render
 	var sd = new SequenceDiagram( $('#render_dlg').find('.view') );
@@ -69,15 +70,12 @@ $(document).ready(function(){
 
 <body>
 
-<div id="render_dlg">
-	<div class="view"></div>
-</div>
-
 <div id="editor_dlg">
 	<textarea editor_updated="1">
+# Title And Author
 Sample Diagram @ v1.0 @ 20160416 @ EchoMa
 
-# Main Object And Message
+# Object And Messages
 Conn Server -> Safe Domain GW : new order request
 Safe Domain GW -> Logic Control : internal protocol
 Logic Control : check param
@@ -90,6 +88,10 @@ Safe Domain GW --> Conn Server : response
 [This is a description for this diagram]
 [ how an order request is passed between sub-systems ]
 	</textarea>
+</div>
+
+<div id="render_dlg">
+	<div class="view"></div>
 </div>
 
 </body>
