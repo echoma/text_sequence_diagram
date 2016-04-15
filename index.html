@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<style>
+html,body {width:100%; height:100%; overflow:hidden; }
+* {margin:0px; padding:0px;}
+body {background-color:DarkKhaki;}
+
+#render_dlg div.view {
+	width: 100%;
+	height: 100%;
+	background-image: linear-gradient(to bottom, #EEE, #FFF);
+	border: 1px solid black;
+	position: relative;
+}
+#editor_dlg textarea{
+	background-color:DarkSlateGray;
+	width: 100%;
+	height: 100%;
+	color: white;
+	font-size: 0.6em;
+	resize: none;
+}
+</style>
+<link href="css/seq_diagram.less" rel="stylesheet/less"/>
+<script type="text/javascript" src="js/less.min.js"></script>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<link href="http://code.jquery.com/ui/1.11.4/themes/black-tie/jquery-ui.css" rel="stylesheet"/>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/seq_diagram.js"></script>
+<script>
+$(document).ready(function(){
+	$('#render_dlg').dialog({
+		title: "Sequence Diagram View",
+		dialogClass: "no-close",
+		width: "80%",
+		height: 500,
+		position: {my: "right bottom", at: "right bottom", of: window}
+	});
+	$('#editor_dlg').dialog({
+		title: "Text Editor",
+		dialogClass: "no-close",
+		width: 500,
+		height: 300,
+		position: {my: "left top", at: "left top", of: window}
+	});
+	//render
+	var sd = new SequenceDiagram( $('#render_dlg').find('.view') );
+	//editor update event handler
+	var editor = $('#editor_dlg').find('textarea');
+	editor.change(function(){
+		$(this).attr('editor_updated',1);
+	}).keyup(function(){
+		$(this).attr('editor_updated',1);
+	});
+	setInterval(function(){
+		var updated = parseInt(editor.attr('editor_updated'));
+		if (updated>0)
+		{
+			sd.draw(editor.val());
+			editor.attr('editor_updated',0);
+		}
+	},1500);
+});
+</script>
+</head>
+
+<body>
+
+<div id="render_dlg">
+	<div class="view"></div>
+</div>
+
+<div id="editor_dlg">
+	<textarea editor_updated="1">
+Sample Diagram @ v1.0 @ 20160416 @ EchoMa
+
+# Main Object And Message
+Conn Server -> Safe Domain GW : new order request
+Safe Domain GW -> Logic Control : internal protocol
+Logic Control : check param
+Logic Control -> Order Manage : add new order
+Order Manage -> Logic Control : order created
+Logic Control --> Safe Domain GW : success response
+Safe Domain GW --> Conn Server : response
+
+# Bottom Description
+[This is a description for this diagram]
+[ how an order request is passed between sub-systems ]
+	</textarea>
+</div>
+
+</body>
+</html>
