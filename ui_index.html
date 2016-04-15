@@ -46,7 +46,7 @@ $(document).ready(function(){
 	//editor update event handler
 	var editor = $(document.body).find('textarea');
 	editor.change(function(){
-		sd.draw($(this).val());
+		$(this).attr('editor_updated',1);
 	}).keyup(function(){
 		$(this).attr('editor_updated',1);
 	});

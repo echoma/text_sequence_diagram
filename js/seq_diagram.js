@@ -218,6 +218,7 @@ function SequenceDiagram(jq_con_dom)
 	};
 	t.recal_line=function()
 	{
+		var base_off = t.jq_dom.offset();
 		var dock_width = t.jq_dom_sysbox.children('[name=subsys0]').find('.bodydock:first').width();
 		for (var i=0; i<t.line_list.length; ++i)
 		{
@@ -242,26 +243,26 @@ function SequenceDiagram(jq_con_dom)
 				var left_x = dom_left.offset().left + dom_left.width()/2 + dock_width/2;
 				var right_x = dom_right.offset().left + dom_right.width()/2 - dock_width/2;
 				dom_line.css('width',right_x-left_x);
-				dom_line.css('left', left_x);
+				dom_line.css('left', left_x-base_off.left);
 				//calculate top
 				var vseg_cnt = t.line_list.length+1;
 				var dom_bodybox = dom_from_subsys.children('.bodybox');
 				var avg_seg_height = dom_bodybox.height()/vseg_cnt;
 				var bodybox_top = dom_bodybox.offset().top;
 				//console.log(bodybox_top+'+('+(i+1)+'*'+avg_seg_height+')');
-				dom_line.css('top',bodybox_top+(i+1)*avg_seg_height-5);
+				dom_line.css('top',bodybox_top+(i+1)*avg_seg_height-5-base_off.top);
 			}
 			else if (line['type']=='self_msg')
 			{
 				var dom_subsys = t.jq_dom_sysbox.children('[name=subsys'+line['sys_idx']+']');
 				var left_x = dom_subsys.offset().left + dom_subsys.width()/2 + dock_width/2;
-				dom_line.css('left', left_x).css('width', dom_subsys.width());
+				dom_line.css('left', left_x-base_off.left).css('width', dom_subsys.width());
 				//calculate top
 				var vseg_cnt = t.line_list.length+1;
 				var dom_bodybox = dom_subsys.children('.bodybox');
 				var avg_seg_height = dom_bodybox.height()/vseg_cnt;
 				var bodybox_top = dom_bodybox.offset().top;
-				dom_line.css('top',bodybox_top+(i+1)*avg_seg_height-5);
+				dom_line.css('top',bodybox_top+(i+1)*avg_seg_height-5-base_off.top);
 			}
 		}
 	};
