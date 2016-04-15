@@ -43,9 +43,9 @@ $(document).ready(function(){
 	$('#render_dlg').dialog({
 		title: "Sequence Diagram View",
 		dialogClass: "no-close",
-		width: "80%",
+		width: 800,
 		height: 600,
-		position: {my: "center", at: "center", of: window}
+		position: {my: "center top", at: "center top", of: window}
 	});
 	//render
 	var sd = new SequenceDiagram( $('#render_dlg').find('.view') );
