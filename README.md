@@ -8,12 +8,18 @@ A cross platform tool for drawing UML sequence diagram in simple text.
 
 ![render_ui](https://github.com/echoma/text_sequence_diagram/wiki/img/render.png)
 
+### Pre-built Binaries
+
+Currently, no pre-built binaries provided, you can download [**nw.js**](https://github.com/nwjs/nw.js) to run this by yourself.
+
+You can also goto [http://echoma.github.io/text_sequence_diagram/](http://echoma.github.io/text_sequence_diagram/) for an online web-app.
+
 ### Features
 
 * Simple pure text syntax to draw beautiful sequence diagram.
-* Cross platform, given by [**nw.js**](http://nwjs.io/) and HTML5.
+* Cross platform, given by [**nw.js**](https://github.com/nwjs/nw.js) and HTML5.
 * Adjust the diagram view size and zoom ratio as you wish.
-* You can integrate the "text to diagram" library to your own application. See [example_integeration.html](https://github.com/echoma/text_sequence_diagram/blob/master/example_integeration.html) for more detail.
+* You can integrate the "text to diagram" library to your own application. See [example_integeration.html](https://github.com/echoma/text_sequence_diagram/blob/master/example_integeration.html) for an very simple example.
 
 ### Syntax
 

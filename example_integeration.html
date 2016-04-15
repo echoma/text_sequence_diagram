@@ -13,7 +13,6 @@ html,body {width:100%;height:100%;}
 <script type="text/javascript" src="js/seq_diagram.js"></script>
 <script>
 $(document).ready(function(){
-	//var text = 'Sample Diagram @ v1.0 @ 20160416 @ EchoMa\nConn Server --> Safe Domain GW : new order request';
 	var text = 'Sample Diagram @ v1.0 @ 20160416 @ EchoMa\n\
 				   Conn Server -> Safe Domain GW : new order request\n\
 				Safe Domain GW -> Trade Gateway : authenticated\n\
@@ -26,7 +25,6 @@ $(document).ready(function(){
 			   Safe Domain GW --> Conn Server : response\n\
 			   [This is a description for this diagram]\n\
 			   [ how an order request is passed between sub-systems ]';
-	//text += text;
 	var sd = new SequenceDiagram($(document.body));
 	sd.draw(text);
 });
@@ -34,6 +32,7 @@ $(document).ready(function(){
 </head>
 
 <body>
+<!--<div id="mycon" style="position:absolute; left:100px; width:100%; height:100%;"></div>-->
 </body>
 
 </html>
