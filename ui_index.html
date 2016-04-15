@@ -20,14 +20,14 @@ $(document).ready(function(){
 		win.close(true);
 	});
 	//window menu
-	var menu = new nw.Menu({type:'menubar'});
+	/*var menu = new nw.Menu({type:'menubar'});
 	var submenu_file = new nw.Menu();
 	submenu_file.append(new nw.MenuItem({label:'Open', key:'O'}));
 	submenu_file.append(new nw.MenuItem({label:'Save', key:'S'}));
 	menu.append(new nw.MenuItem({ label: 'File', submenu:submenu_file }));
-	win.menu = menu;
+	win.menu = menu;*/
 	//open the render window
-	nw.Window.open('render.html', {
+	nw.Window.open('ui_render.html', {
 			new_instance:false,
 			id:"render",
 			title:'Sequence Diagram View',
@@ -97,15 +97,20 @@ function zoom(inc)
 </div>
 
 <textarea class="editor" editor_updated="1">
-# Here is a sample:
+Sample Diagram @ v1.0 @ 20160416 @ EchoMa
 
+# Main Part
 Conn Server -> Safe Domain GW : new order request
-Safe Domain GW -> Trade Gateway : authenticated
-Trade Gateway -> Logic Control : internal protocol
-Logic Control --> Trade Gateway : success response
-Trade Gateway --> Safe Domain GW : success response
+Safe Domain GW -> Logic Control : internal protocol
+Logic Control : check param
+Logic Control -> Order Manage : add new order
+Order Manage -> Logic Control : order created
+Logic Control --> Safe Domain GW : success response
 Safe Domain GW --> Conn Server : response
-</textarea>
 
+# Bottom
+[This is a description for this diagram]
+[ how an order request is passed between sub-systems ]
+</textarea>
 </body>
 </html>

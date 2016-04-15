@@ -13,23 +13,20 @@ html,body {width:100%;height:100%;}
 <script type="text/javascript" src="js/seq_diagram.js"></script>
 <script>
 $(document).ready(function(){
-	var text = '  Conn Server -> Safe Domain GW : new order request\n\
+	//var text = 'Sample Diagram @ v1.0 @ 20160416 @ EchoMa\nConn Server --> Safe Domain GW : new order request';
+	var text = 'Sample Diagram @ v1.0 @ 20160416 @ EchoMa\n\
+				   Conn Server -> Safe Domain GW : new order request\n\
 				Safe Domain GW -> Trade Gateway : authenticated\n\
 				 Trade Gateway -> Logic Control : internal protocol\n\
+				 Logic Control : check param\n\
 				 Logic Control -> Order Manage : add new order\n\
-				  Order Manage -> Logic Control: new order added\n\
-				 Logic Control -> Asset Manage : pre-hold asset\n\
-				 Asset Manage --> Logic Control : no enogh asset\n\
-				Logic Control --> Trade Gateway : failed response\n\
-				  Asset Manage -> Logic Control : asset held\n\
-				 Logic Control -> Exchange Comm : send order to exchange\n\
-				 Exchange Comm -> Exchange : send order\n\
-					  Exchange -> Exchange Comm : order created in exchange\n\
-				 Exchange Comm -> Logic Control : order created\n\
+				  Order Manage -> Logic Control : order created\n\
 				Logic Control --> Trade Gateway : success response\n\
 				Trade Gateway --> Safe Domain GW : success response\n\
-			   Safe Domain GW --> Conn Server : response\n';
-	text += text;
+			   Safe Domain GW --> Conn Server : response\n\
+			   [This is a description for this diagram]\n\
+			   [ how an order request is passed between sub-systems ]';
+	//text += text;
 	var sd = new SequenceDiagram($(document.body));
 	sd.draw(text);
 });

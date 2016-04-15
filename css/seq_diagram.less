@@ -4,10 +4,13 @@
 @large_font_size: 14*@px;
 @huge_font_size: 16*@px;
 @box_bordercolor: black;
-@box_backcolor_begin: #DDD;
+@box_bordercolor_light: gray;
+@box_backcolor_begin: #CCC;
 @box_backcolor_end: lighten(@box_backcolor_begin, 50%);
+@box_backcolor_tips: LemonChiffon;
 @box_shadowcolor: darken(@box_backcolor_begin, 10%);
 @subsys_maxwidth: 200*@px;
+@color: midnightblue;
 
 .seqdiagram {
 	margin: 0;
@@ -16,13 +19,37 @@
 		margin: 0;
 		padding: 0;
 	}
+	color: @color;
 	width: 100%;
 	height: 100%;
+	display: flex;
+	flex-direction: column;
+	.seqdiagram_title {
+		display: flex;
+		font-size: @midium_font_size;
+		text-shadow: 2*@px 2*@px 2*@px @box_shadowcolor;
+		.box {
+			padding: 5*@px 10*@px 5*@px 10*@px;
+			border: @px solid @box_bordercolor_light;
+			border-top: 0;
+			background-color: @box_backcolor_tips;
+		}
+		.west {
+			border-left: 0;
+			border-bottom-right-radius: @huge_font_size;
+		}
+		.center {
+			flex: 1;
+		}
+		.east {
+			border-right: 0;
+			border-bottom-left-radius: @huge_font_size;
+		}
+	}
 	.seqdiagram_sysbox {
 		display: flex;
 		position: relative;
-		width: 100%;
-		height: 100%;
+		flex: 1;
 		.subsys {
 			flex: 1;
 			display: flex;
@@ -67,6 +94,21 @@
 			}
 		}
 	}
+	.seqdiagram_bottom {
+		display: flex;
+		font-size: @midium_font_size;
+		text-shadow: 2*@px 2*@px 2*@px @box_shadowcolor;
+		margin: 5*@px;
+		.side {
+			flex: 1;
+		}
+		.center {
+			padding: 15*@px;
+			border: @px solid @box_bordercolor_light;
+			border-radius: @huge_font_size;
+			background-color: @box_backcolor_tips;
+		}
+	}
 	.arrow_line {
 		position: absolute;
 		display: flex;
@@ -87,9 +129,11 @@
 		}
 		.arrow_to_right:before {
 			content: "▶";
+			color: @box_bordercolor;
 		}
 		.arrow_to_left:before {
 			content: "◀";
+			color: @box_bordercolor;
 		}
 		.note {
 			position: absolute;
@@ -101,8 +145,38 @@
 			text-align: center;
 			font-size: @large_font_size;
 			text-shadow: 2*@px 2*@px 2*@px @box_shadowcolor;
-			paddng: 0 5*@px 0 5*@px;
+			paddng: 0 8*@px 0 8*@px;
 			color: dimgray;
+		}
+	}
+	.self_msg_line {
+		position: absolute;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: @small_font_size;
+		z-index: -1;
+		width:200px;
+		.link {
+			width: 1.5*@huge_font_size;
+			height: 1.5*@huge_font_size;
+			border: @px solid @box_bordercolor;
+			border-left: 0;
+		}
+		.arrow:before {
+			content: "◀";
+			color: @box_bordercolor;
+			position: absolute;
+			left: 0;
+			bottom: -1.3*@large_font_size;
+		}
+		.note {
+			flex: 1;
+			text-align: left;
+			font-size: @large_font_size;
+			text-shadow: 2*@px 2*@px 2*@px @box_shadowcolor;
+			color: dimgray;
+			padding-left: 5*@px;
 		}
 	}
 }
