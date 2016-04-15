@@ -91,6 +91,7 @@
 					background-color: pink;
 					flex: 1;
 					box-shadow: 4*@px 4*@px 4*@px @box_shadowcolor;
+					z-index: 1;
 				}
 			}
 		}
@@ -116,7 +117,7 @@
 		justify-content: center;
 		align-items: center;
 		height: @small_font_size;
-		z-index: -1;
+		z-index: 0;
 		width:200px;
 		.line {
 			border-bottom: @px solid @box_bordercolor;	
@@ -156,7 +157,7 @@
 		justify-content: center;
 		align-items: center;
 		height: @small_font_size;
-		z-index: -1;
+		z-index: 0;
 		width:200px;
 		.link {
 			width: 1.5*@huge_font_size;
@@ -169,7 +170,7 @@
 			color: @box_bordercolor;
 			position: absolute;
 			left: 0;
-			bottom: -1.3*@large_font_size;
+			bottom: -1.25*@large_font_size;
 		}
 		.note {
 			flex: 1;
