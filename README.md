@@ -8,9 +8,11 @@ A cross platform tool for drawing UML sequence diagram in simple text.
 
 ![render_ui](https://github.com/echoma/text_sequence_diagram/wiki/img/render.png)
 
-### Pre-built Binaries
+### Pre-built Executables
 
-Currently, no pre-built binaries provided, you can download [**nw.js**](https://github.com/nwjs/nw.js) to run this by yourself.
+Download page: [Download](https://github.com/echoma/text_sequence_diagram/wiki/down/text_sequence_diagram_win64_20160424.7z)
+
+### Online Version
 
 You can also goto [http://echoma.github.io/text_sequence_diagram/](http://echoma.github.io/text_sequence_diagram/) for an online web-app.
 

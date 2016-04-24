@@ -1,5 +1,6 @@
 {
 	"name": "Text Sequence Diagram",
+	"version": "0.1",
 	"main": "ui_index.html",
 		"window": {
 		"width": 400,
