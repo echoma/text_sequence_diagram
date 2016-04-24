@@ -10,7 +10,7 @@ A cross platform tool for drawing UML sequence diagram in simple text.
 
 ### Pre-built Executables
 
-Download page: [Download](https://github.com/echoma/text_sequence_diagram/wiki/down/text_sequence_diagram_win64_20160424.7z)
+Download page: [Download](https://github.com/echoma/text_sequence_diagram/wiki/Download)
 
 ### Online Version
 
