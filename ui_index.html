@@ -11,7 +11,7 @@
 //whether run in nw.js
 var is_nwjs = (typeof nw != 'undefined');
 //whether run in dev mode (nw.js SDK version)
-var is_nwjsdev = is_nwjs && (typeof nw.Window.get().showDevTools != 'undefined');
+var is_nwjsdev = is_nwjs && (window.navigator.plugins.namedItem('Native Client') !== null);
 if (is_nwjsdev)
     nw.Window.get().showDevTools();
 //the render window(native nw.js window)
