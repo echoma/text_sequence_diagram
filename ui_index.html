@@ -7,8 +7,18 @@
 <script type="text/javascript" src="js/less.min.js"></script>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <link href="./css/icomoon/style.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/i18.js"></script>
 <script>
+//whether run in nw.js
+var is_nwjs = (typeof nw != 'undefined');
+//whether run in dev mode (nw.js SDK version)
+var is_nwjsdev = is_nwjs && (window.navigator.plugins.namedItem('Native Client') !== null);
+if (is_nwjsdev)
+    nw.Window.get().showDevTools();
+//the render window(native nw.js window)
 var render_win = null;
+
+//initialization after load
 $(document).ready(function(){
 	var win = nw.Window.get();
 	win.on('close', function() {
@@ -19,13 +29,28 @@ $(document).ready(function(){
 		}
 		win.close(true);
 	});
-	//window menu
-	/*var menu = new nw.Menu({type:'menubar'});
-	var submenu_file = new nw.Menu();
-	submenu_file.append(new nw.MenuItem({label:'Open', key:'O'}));
-	submenu_file.append(new nw.MenuItem({label:'Save', key:'S'}));
-	menu.append(new nw.MenuItem({ label: 'File', submenu:submenu_file }));
-	win.menu = menu;*/
+	//native window menu
+	if (is_nwjs)
+	{
+        var menu = new nw.Menu({type:'menubar'});
+        var submenu_file = new nw.Menu();
+        submenu_file.append(new nw.MenuItem({label:menu_text('file-open'), click: function(){open_file();}}));
+        submenu_file.append(new nw.MenuItem({label:menu_text('file-save-as'), click: function(){save_file_as();}}));
+        menu.append(new nw.MenuItem({ label: menu_text('file'), submenu:submenu_file }));
+        var submenu_img = new nw.Menu();
+        submenu_img.append(new nw.MenuItem({label:menu_text('img-png'), click: function(){export_img('png');}}));
+        submenu_img.append(new nw.MenuItem({label:menu_text('img-jpeg'), click: function(){export_img('jpeg');}}));
+        menu.append(new nw.MenuItem({ label: menu_text('img'), submenu:submenu_img }));
+        menu.append(new nw.MenuItem({ label: menu_text('zoomin'), click: function(){zoom(0.2);} }));
+        menu.append(new nw.MenuItem({ label: menu_text('zoomout'), click: function(){zoom(-0.2);} }));
+        menu.append(new nw.MenuItem({ label: menu_text('zoomrst'), click: function(){zoom(0);} }));
+        win.menu = menu;
+	}
+	//toolbar for non-native env or dev mode
+	if (!is_nwjs || is_nwjsdev)
+	{
+        document.getElementById('toolbar').style['display'] = 'block';
+	}
 	//open the render window
 	nw.Window.open('ui_render.html', {
 			new_instance:false,
@@ -44,7 +69,7 @@ $(document).ready(function(){
 		}
 	);
 	//editor update event handler
-	var editor = $(document.body).find('textarea');
+	var editor = $('#editor');
 	editor.change(function(){
 		$(this).attr('editor_updated',1);
 	}).keyup(function(){
@@ -78,6 +103,72 @@ $(document).ready(function(){
 		return false;
 	}
 });
+//open and load local file into editor
+function open_file()
+{
+    $('#open_file').click();
+}
+function open_file_on_select()
+{
+    var file = $('#open_file').val();
+    fs = require('fs');
+    fs.readFile(file, function(err, data) {
+        if (err)
+        {
+            alert('Open file error: '+err);
+            return;
+        }
+        var editor = $('#editor');
+        editor.val(data).change();
+    });
+}
+//save content into file as select path-name
+function save_file_as()
+{
+    $('#save_file_as').click();
+}
+function save_file_as_on_select()
+{
+    var file = $('#save_file_as').val();
+    fs = require('fs');
+    fs.writeFile(file, $('#editor').val(), function(err) {
+        if (err)
+        {
+            alert('Save file error: '+err);
+            return;
+        }
+    });
+}
+//export diagram imange and save on local disk
+function export_img(format)
+{
+    if (!is_nwjs)
+    {
+        alert('Only supported in native version. goto https://github.com/echoma/text_sequence_diagram/wiki/Download');
+        return;
+    }
+    //check format, set mime
+    var mime = 'image/png';
+    if (format=='jpeg')
+    {
+        mime = 'image/jpeg';
+    }
+    else if (format!='png')
+    {
+        alert('Non-supported format: '+format);
+        return;
+    }
+    render_win.capturePage(
+        function(img_data){
+            var alink = document.getElementById('export_img');
+            alink.download = 'export.'+format;
+            alink.href = img_data;
+            //alink.dataset.downloadurl = [mime, alink.download, alink.href].join(':');
+            alink.click();
+        },{format:format, datatype:'datauri'}
+    );
+}
+//adjust zoom ratio
 function zoom(inc)
 {
 	if (inc==0)
@@ -90,13 +181,13 @@ function zoom(inc)
 
 <body>
 
-<div class="toolbar">
+<div id="toolbar" class="toolbar">
 	<button onClick="zoom(0.2)" title="Zoom In"><span class="icon-zoom-in"></span> Zoom In</button>
 	<button onClick="zoom(-0.2)" title="Zoom Out"><span class="icon-zoom-out"></span> Zoom Out</button>
 	<button onClick="zoom(0)" title="Zoom Reset"><span class="icon-spinner11"></span> Zoom Reset</button>
 </div>
 
-<textarea class="editor" editor_updated="1">
+<textarea id="editor" class="editor" editor_updated="1">
 Sample Diagram @ v1.0 @ 20160416 @ EchoMa
 
 # Main Part
@@ -111,6 +202,14 @@ Safe Domain GW --> Conn Server : response
 # Bottom
 [This is a description for this diagram]
 [ how an order request is passed between sub-systems ]
+
+# TIPS:
+#   1. You can drag and drop a text file into this editor.
+#   2. UTF-8 is used when opening a text file.
 </textarea>
+
+<a id="export_img" style="display:none"></a>
+<input id="open_file" type="file" style="display:none" onchange="open_file_on_select()"/>
+<input id="save_file_as" type="file" style="display:none"  onchange="save_file_as_on_select()" nwsaveas />
 </body>
 </html>
