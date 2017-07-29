@@ -3,8 +3,8 @@
 	"version": "0.1",
 	"main": "ui_index.html",
 		"window": {
-		"width": 400,
-		"height": 350,
+		"width": 500,
+		"height": 400,
 		"min_width": 100,
 		"min_height": 100,
 		"plugin": false
