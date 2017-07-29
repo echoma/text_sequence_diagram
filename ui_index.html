@@ -7,6 +7,7 @@
 <script type="text/javascript" src="js/less.min.js"></script>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <link href="./css/icomoon/style.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/i18.js"></script>
 <script>
 //whether run in nw.js
 var is_nwjs = (typeof nw != 'undefined');
@@ -33,16 +34,16 @@ $(document).ready(function(){
 	{
         var menu = new nw.Menu({type:'menubar'});
         var submenu_file = new nw.Menu();
-        submenu_file.append(new nw.MenuItem({label:'Open', click: function(){open_file();}}));
-        submenu_file.append(new nw.MenuItem({label:'Save As', click: function(){save_file_as();}}));
-        menu.append(new nw.MenuItem({ label: 'File', submenu:submenu_file }));
+        submenu_file.append(new nw.MenuItem({label:menu_text('file-open'), click: function(){open_file();}}));
+        submenu_file.append(new nw.MenuItem({label:menu_text('file-save-as'), click: function(){save_file_as();}}));
+        menu.append(new nw.MenuItem({ label: menu_text('file'), submenu:submenu_file }));
         var submenu_img = new nw.Menu();
-        submenu_img.append(new nw.MenuItem({label:'png', click: function(){export_img('png');}}));
-        submenu_img.append(new nw.MenuItem({label:'jpeg', click: function(){export_img('jpeg');}}));
-        menu.append(new nw.MenuItem({ label: 'Export Image', submenu:submenu_img }));
-        menu.append(new nw.MenuItem({ label: 'Zoom In', click: function(){zoom(0.2);} }));
-        menu.append(new nw.MenuItem({ label: 'Zoom Out', click: function(){zoom(-0.2);} }));
-        menu.append(new nw.MenuItem({ label: 'Zoom Reset', click: function(){zoom(0);} }));
+        submenu_img.append(new nw.MenuItem({label:menu_text('img-png'), click: function(){export_img('png');}}));
+        submenu_img.append(new nw.MenuItem({label:menu_text('img-jpeg'), click: function(){export_img('jpeg');}}));
+        menu.append(new nw.MenuItem({ label: menu_text('img'), submenu:submenu_img }));
+        menu.append(new nw.MenuItem({ label: menu_text('zoomin'), click: function(){zoom(0.2);} }));
+        menu.append(new nw.MenuItem({ label: menu_text('zoomout'), click: function(){zoom(-0.2);} }));
+        menu.append(new nw.MenuItem({ label: menu_text('zoomrst'), click: function(){zoom(0);} }));
         win.menu = menu;
 	}
 	//toolbar for non-native env or dev mode
