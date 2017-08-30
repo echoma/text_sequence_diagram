@@ -13,7 +13,7 @@ function SequenceDiagram(jq_con_dom)
 	t.jq_con_dom.append(t.jq_dom);
 	t.dock_color_list = ['SteelBlue','coral','DeepSkyBlue','lightgreen','SlateBlue','HotPink','Olive','Sienna','Tan'];
 	t.regex_msg = /^(.+?)(\-{1,2}\>)([^:]*)(:(.*))+$/;
-	t.regex_self_msg = /^([^\#>]+?)(:(.*))+$/;
+	t.regex_self_msg = /^([^\#>]+?)(:(:?)(.*))+$/;
 	t.regex_title = /^([^@]+)?@([^@]*)?@([^@]*)?@([^@]+)$/;
 	t.regex_bottom_description = /^\s*?\[([^\]]*)\]\s*$/;
 	t.px2em=function(n) { return n*0.0625; };
@@ -55,7 +55,7 @@ function SequenceDiagram(jq_con_dom)
 				{
 					if (i>seg_start)//end current seg
 					{
-						sys['lineseg'].push({'begin':seg_start, 'end':i-1, 'is_dock':is_dock});
+						sys['lineseg'].push({'begin':seg_start, 'end':i-1, 'is_dock':false});
 					}
 					//start a new seg
 					seg_start = i;
@@ -68,7 +68,7 @@ function SequenceDiagram(jq_con_dom)
 				{
 					if (i>seg_start)//end current seg
 					{
-						sys['lineseg'].push({'begin':seg_start, 'end':i-1, 'is_dock':is_dock});
+						sys['lineseg'].push({'begin':seg_start, 'end':i-1, 'is_dock':true});
 					}
 					//start a new seg
 					seg_start = i;
@@ -167,7 +167,7 @@ function SequenceDiagram(jq_con_dom)
 			{
 				var lfi = line['from_sys_idx'];
 				var lti = line['to_sys_idx'];
-				var line_class = parseInt(line['is_dash'])?'dashline':'line';
+				var line_class = line['is_dash']?'dashline':'line';
 				if (lfi<lti)
 				{
 					dom_line = $('<div class="arrow_line">\
@@ -188,8 +188,9 @@ function SequenceDiagram(jq_con_dom)
 			else if (line['type']=='self_msg')
 			{
 				var li = line['sys_idx'];
+				var line_class = line['is_dash']?'dashlink':'link';
 				dom_line = $('<div class="self_msg_line">\
-					<div class="link"></div>\
+					<div class="'+line_class+'"></div>\
 					<div class="arrow"></div>\
 					<div class="note"></div>\
 				</div>');
@@ -332,7 +333,9 @@ function SequenceDiagram(jq_con_dom)
 		var mats = line.match(t.regex_self_msg);
 		if (null!=mats)
 		{
-			return {'type':'self_msg', 'name':mats[1].trim(), 'note':mats[3].trim()};
+			var obj = {'type':'self_msg', 'name':mats[1].trim(), 'note':mats[4].trim()};
+			obj['is_dash'] = mats[3].trim() == ':' ? 1 : 0;
+			return obj;
 		}
 		return null;
 	};
