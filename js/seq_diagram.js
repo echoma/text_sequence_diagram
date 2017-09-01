@@ -114,9 +114,20 @@ function SequenceDiagram(jq_con_dom)
 			if (line['type']=='msg')
 			{
 				var f_idx = t.ensure_subsys( line['from'] );
+				if(line['connect_from']){
+					for(var j = t.subsys_list[f_idx]['linedot'][t.subsys_list[f_idx]['linedot'].length-1];j<i;j++){
+						t.subsys_list[f_idx]['linedot'].push(j);
+					}
+				}
 				t.subsys_list[f_idx]['linedot'].push(i);
 				line['from_sys_idx'] = f_idx;
+
 				var t_idx = t.ensure_subsys( line['to'] );
+				if(line['connect_to']){
+					for(var j = t.subsys_list[t_idx]['linedot'][t.subsys_list[t_idx]['linedot'].length-1];j<i;j++){
+						t.subsys_list[t_idx]['linedot'].push(j);
+					}
+				}
 				t.subsys_list[t_idx]['linedot'].push(i);
 				line['to_sys_idx'] = t_idx;
 			}
@@ -311,7 +322,19 @@ function SequenceDiagram(jq_con_dom)
 			var op_str = mats[2].trim();
 			var name_end = mats[3].trim();
 			var note = mats[5].trim();
-			var obj = {'type':'msg', 'from':name_begin, 'to':name_end, 'note':note};
+			var connect_begin = 0;
+			var connect_end = 0;
+
+			if(name_begin.substring(0, 1) == '^'){
+				name_begin = name_begin.substring(1);
+				connect_begin = 1;
+			}
+			if(name_end.substring(0, 1) == '^'){
+				name_end = name_end.substring(1);
+				connect_end = 1;
+			}
+
+			var obj = {'type':'msg', 'from':name_begin, 'to':name_end, 'note':note, 'connect_from':connect_begin, 'connect_to':connect_end};
 			if (op_str=='->')
 			{
 				obj['is_dash'] = 0;
