@@ -68,7 +68,7 @@
 				font-size: @large_font_size;
 				background-image: linear-gradient(to bottom, @box_backcolor_begin, @box_backcolor_end);
 				white-space: nowrap;
-				overflow: hidden; 
+				overflow: hidden;
 				text-overflow:ellipsis;
 			}
 			.bodybox {
@@ -120,12 +120,12 @@
 		z-index: 0;
 		width:200px;
 		.line {
-			border-bottom: @px solid @box_bordercolor;	
+			border-bottom: @px solid @box_bordercolor;
 			height: 0;
 			flex: 1;
 		}
 		.dashline {
-			border-bottom: @px dashed @box_bordercolor;	
+			border-bottom: @px dashed @box_bordercolor;
 			height: 0;
 			flex: 1;
 		}
@@ -163,6 +163,12 @@
 			width: 1.5*@huge_font_size;
 			height: 1.5*@huge_font_size;
 			border: @px solid @box_bordercolor;
+			border-left: 0;
+		}
+		.dashlink {
+			width: 1.5*@huge_font_size;
+			height: 1.5*@huge_font_size;
+			border: @px dashed @box_bordercolor;
 			border-left: 0;
 		}
 		.arrow:before {
