@@ -115,18 +115,36 @@ function SequenceDiagram(jq_con_dom)
 			{
 				var f_idx = t.ensure_subsys( line['from'] );
 				if(line['connect_from']){
-					for(var j = t.subsys_list[f_idx]['linedot'][t.subsys_list[f_idx]['linedot'].length-1];j<i;j++){
-						t.subsys_list[f_idx]['linedot'].push(j);
+					var current_item = t.subsys_list[f_idx]['linedot'].pop();
+					var index = t.subsys_list[f_idx]['linedot'].length-1;
+					if(index >= 0){
+						for(var j = t.subsys_list[f_idx]['linedot'][index];j<i;j++){
+							t.subsys_list[f_idx]['linedot'].push(j);
+						}
+					}else{
+						for(var j = 0;j<i;j++){
+							t.subsys_list[f_idx]['linedot'].push(j);
+						}
 					}
+					t.subsys_list[f_idx]['linedot'].push(current_item);
 				}
 				t.subsys_list[f_idx]['linedot'].push(i);
 				line['from_sys_idx'] = f_idx;
 
 				var t_idx = t.ensure_subsys( line['to'] );
 				if(line['connect_to']){
-					for(var j = t.subsys_list[t_idx]['linedot'][t.subsys_list[t_idx]['linedot'].length-1];j<i;j++){
-						t.subsys_list[t_idx]['linedot'].push(j);
+					var current_item = t.subsys_list[t_idx]['linedot'].pop();
+					var index = t.subsys_list[t_idx]['linedot'].length-1;
+					if(index >= 0){
+						for(var j = t.subsys_list[t_idx]['linedot'][index];j<i;j++){
+							t.subsys_list[t_idx]['linedot'].push(j);
+						}
+					}else{
+						for(var j = 0;j<i;j++){
+							t.subsys_list[t_idx]['linedot'].push(j);
+						}
 					}
+					t.subsys_list[t_idx]['linedot'].push(current_item);
 				}
 				t.subsys_list[t_idx]['linedot'].push(i);
 				line['to_sys_idx'] = t_idx;
@@ -326,11 +344,11 @@ function SequenceDiagram(jq_con_dom)
 			var connect_end = 0;
 
 			if(name_begin.substring(0, 1) == '^'){
-				name_begin = name_begin.substring(1);
+				name_begin = name_begin.substring(1).trim();
 				connect_begin = 1;
 			}
 			if(name_end.substring(0, 1) == '^'){
-				name_end = name_end.substring(1);
+				name_end = name_end.substring(1).trim();
 				connect_end = 1;
 			}
 
@@ -356,7 +374,9 @@ function SequenceDiagram(jq_con_dom)
 		var mats = line.match(t.regex_self_msg);
 		if (null!=mats)
 		{
-			var obj = {'type':'self_msg', 'name':mats[1].trim(), 'note':mats[4].trim()};
+			var name = mats[1];
+			if(name.substring(0, 1) == '^') name = name.substring(1);
+			var obj = {'type':'self_msg', 'name':name.trim(), 'note':mats[4].trim()};
 			obj['is_dash'] = mats[3].trim() == ':' ? 1 : 0;
 			return obj;
 		}
