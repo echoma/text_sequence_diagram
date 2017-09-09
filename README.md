@@ -2,23 +2,23 @@
 
 A cross platform tool for drawing UML sequence diagram in simple text.
 
-### Snapshot
-
-![main_ui](https://github.com/echoma/text_sequence_diagram/wiki/img/index.png)
-
-![render_ui](https://github.com/echoma/text_sequence_diagram/wiki/img/render.png)
-
 ### Pre-built Executables Download
 
 Download page: [Download](https://github.com/echoma/text_sequence_diagram/wiki/Download)
 
-Latest release date: 2017-07-29
+Latest release date: 2017-09-07
 
 ### Online Version
 
 You can also goto [http://echoma.github.io/text_sequence_diagram/](http://echoma.github.io/text_sequence_diagram/) for an online web-app.
 
 > This online version can not export diagram image as pre-built executables.
+
+### Snapshot
+
+![main_ui](https://media.githubusercontent.com/media/echoma/lfs/master/text_sequence_diagram/img/index.png)
+
+![render_ui](https://media.githubusercontent.com/media/echoma/lfs/master/text_sequence_diagram/img/render.png)
 
 ### Features
 
@@ -73,3 +73,27 @@ Logic Control --> Trade Gateway : success response
 Trade Gateway --> Safe Domain GW : success response
 Safe Domain GW --> Conn Server : response
 ```
+
+### Adavanced Syntax
+
+Thanks to [@Phy25](https://github.com/phy25)
+
+* Self Message with dash link
+```scala
+Object :: Message Content
+```
+
+* Continuous life-line
+
+In the text, add `^` before the broker object.
+
+As the following example shows, watch the `^` before `A` in the 4th line.
+
+```scala
+A -> B: msg-1
+B -> C: msg-2
+C -> B: msg-3
+B -> ^A: msg-4
+```
+
+![adv](https://media.githubusercontent.com/media/echoma/lfs/master/text_sequence_diagram/img/adv.png)
