@@ -13,7 +13,7 @@ function SequenceDiagram(jq_con_dom)
 	t.jq_con_dom.append(t.jq_dom);
 	t.dock_color_list = ['SteelBlue','coral','DeepSkyBlue','lightgreen','SlateBlue','HotPink','Olive','Sienna','Tan'];
 	t.regex_msg = /^(.+?)(\-{1,2}\>)([^:]*)(:(.*))+$/;
-	t.regex_self_msg = /^([^\#>]+?)(:(.*))+$/;
+	t.regex_self_msg = /^([^\#>]+?)(:(:?)(.*))+$/;
 	t.regex_title = /^([^@]+)?@([^@]*)?@([^@]*)?@([^@]+)$/;
 	t.regex_bottom_description = /^\s*?\[([^\]]*)\]\s*$/;
 	t.px2em=function(n) { return n*0.0625; };
@@ -55,7 +55,7 @@ function SequenceDiagram(jq_con_dom)
 				{
 					if (i>seg_start)//end current seg
 					{
-						sys['lineseg'].push({'begin':seg_start, 'end':i-1, 'is_dock':is_dock});
+						sys['lineseg'].push({'begin':seg_start, 'end':i-1, 'is_dock':false});
 					}
 					//start a new seg
 					seg_start = i;
@@ -68,7 +68,7 @@ function SequenceDiagram(jq_con_dom)
 				{
 					if (i>seg_start)//end current seg
 					{
-						sys['lineseg'].push({'begin':seg_start, 'end':i-1, 'is_dock':is_dock});
+						sys['lineseg'].push({'begin':seg_start, 'end':i-1, 'is_dock':true});
 					}
 					//start a new seg
 					seg_start = i;
@@ -114,9 +114,38 @@ function SequenceDiagram(jq_con_dom)
 			if (line['type']=='msg')
 			{
 				var f_idx = t.ensure_subsys( line['from'] );
+				if(line['connect_from']){
+					var current_item = t.subsys_list[f_idx]['linedot'].pop();
+					var index = t.subsys_list[f_idx]['linedot'].length-1;
+					if(index >= 0){
+						for(var j = t.subsys_list[f_idx]['linedot'][index];j<i;j++){
+							t.subsys_list[f_idx]['linedot'].push(j);
+						}
+					}else{
+						for(var j = 0;j<i;j++){
+							t.subsys_list[f_idx]['linedot'].push(j);
+						}
+					}
+					t.subsys_list[f_idx]['linedot'].push(current_item);
+				}
 				t.subsys_list[f_idx]['linedot'].push(i);
 				line['from_sys_idx'] = f_idx;
+
 				var t_idx = t.ensure_subsys( line['to'] );
+				if(line['connect_to']){
+					var current_item = t.subsys_list[t_idx]['linedot'].pop();
+					var index = t.subsys_list[t_idx]['linedot'].length-1;
+					if(index >= 0){
+						for(var j = t.subsys_list[t_idx]['linedot'][index];j<i;j++){
+							t.subsys_list[t_idx]['linedot'].push(j);
+						}
+					}else{
+						for(var j = 0;j<i;j++){
+							t.subsys_list[t_idx]['linedot'].push(j);
+						}
+					}
+					t.subsys_list[t_idx]['linedot'].push(current_item);
+				}
 				t.subsys_list[t_idx]['linedot'].push(i);
 				line['to_sys_idx'] = t_idx;
 			}
@@ -167,7 +196,7 @@ function SequenceDiagram(jq_con_dom)
 			{
 				var lfi = line['from_sys_idx'];
 				var lti = line['to_sys_idx'];
-				var line_class = parseInt(line['is_dash'])?'dashline':'line';
+				var line_class = line['is_dash']?'dashline':'line';
 				if (lfi<lti)
 				{
 					dom_line = $('<div class="arrow_line">\
@@ -188,8 +217,9 @@ function SequenceDiagram(jq_con_dom)
 			else if (line['type']=='self_msg')
 			{
 				var li = line['sys_idx'];
+				var line_class = line['is_dash']?'dashlink':'link';
 				dom_line = $('<div class="self_msg_line">\
-					<div class="link"></div>\
+					<div class="'+line_class+'"></div>\
 					<div class="arrow"></div>\
 					<div class="note"></div>\
 				</div>');
@@ -310,7 +340,19 @@ function SequenceDiagram(jq_con_dom)
 			var op_str = mats[2].trim();
 			var name_end = mats[3].trim();
 			var note = mats[5].trim();
-			var obj = {'type':'msg', 'from':name_begin, 'to':name_end, 'note':note};
+			var connect_begin = 0;
+			var connect_end = 0;
+
+			if(name_begin.substring(0, 1) == '^'){
+				name_begin = name_begin.substring(1).trim();
+				connect_begin = 1;
+			}
+			if(name_end.substring(0, 1) == '^'){
+				name_end = name_end.substring(1).trim();
+				connect_end = 1;
+			}
+
+			var obj = {'type':'msg', 'from':name_begin, 'to':name_end, 'note':note, 'connect_from':connect_begin, 'connect_to':connect_end};
 			if (op_str=='->')
 			{
 				obj['is_dash'] = 0;
@@ -332,7 +374,11 @@ function SequenceDiagram(jq_con_dom)
 		var mats = line.match(t.regex_self_msg);
 		if (null!=mats)
 		{
-			return {'type':'self_msg', 'name':mats[1].trim(), 'note':mats[3].trim()};
+			var name = mats[1];
+			if(name.substring(0, 1) == '^') name = name.substring(1);
+			var obj = {'type':'self_msg', 'name':name.trim(), 'note':mats[4].trim()};
+			obj['is_dash'] = mats[3].trim() == ':' ? 1 : 0;
+			return obj;
 		}
 		return null;
 	};
